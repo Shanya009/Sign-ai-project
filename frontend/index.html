@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SignBridge AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="bg" aria-hidden="true">
+    <span class="blob blob--1"></span>
+    <span class="blob blob--2"></span>
+    <span class="blob blob--3"></span>
+    <div class="grid-overlay"></div>
+  </div>
+  <div class="spotlight" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <header class="nav">
+    <div class="nav__inner">
+      <a href="#top" class="nav__brand">
+        <span class="nav__logo">🤟</span>
+        <span>SignBridge <b>AI</b></span>
+      </a>
+      <nav class="nav__links">
+        <a href="#how">How it works</a>
+        <a href="#signs">Signs</a>
+        <span class="badge"><i></i> Demo mode</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" id="top">
+
+    <!-- Hero -->
+    <section class="hero">
+      <span class="float float--1" aria-hidden="true">✋</span>
+      <span class="float float--2" aria-hidden="true">🤟</span>
+      <span class="float float--3" aria-hidden="true">👌</span>
+      <span class="float float--4" aria-hidden="true">✌️</span>
+      <span class="float float--5" aria-hidden="true">🤙</span>
+
+      <span class="pill">✨ AI-powered sign language translator</span>
+      <h1>Translate Sign Language <br /><span class="gradient-text">into Text.</span></h1>
+      <p>Show us a hand sign. Get its meaning back in seconds.</p>
+      <a href="#app" class="hero__cta">Try it now ↓</a>
+    </section>
+
+    <!-- App -->
+    <section class="card" id="app">
+
+      <!-- Input panel -->
+      <div class="panel">
+        <div class="panel__head">
+          <h2 class="panel__title">Input</h2>
+          <span class="hint">Tip: you can paste an image with Ctrl+V</span>
+        </div>
+
+        <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" hidden />
+
+        <label for="fileInput" id="dropzone" class="dropzone">
+          <span class="corner corner--tl"></span>
+          <span class="corner corner--tr"></span>
+          <span class="corner corner--bl"></span>
+          <span class="corner corner--br"></span>
+
+          <img id="preview" class="preview" alt="Uploaded sign preview" hidden />
+          <div class="scanline"></div>
+
+          <div id="dropzoneHint" class="dropzone__hint">
+            <span class="dropzone__icon">↑</span>
+            <p>Drop a sign image here</p>
+            <small>or click to browse · PNG, JPG, WEBP · max 5 MB</small>
+          </div>
+        </label>
+
+        <p id="fileName" class="file-name"></p>
+
+        <div class="actions">
+          <button id="translateBtn" class="btn btn--primary" disabled>
+            <span class="btn__text">Translate</span>
+          </button>
+          <button id="clearBtn" class="btn btn--ghost">Clear</button>
+        </div>
+      </div>
+
+      <!-- Result panel -->
+      <div class="panel">
+        <div class="panel__head">
+          <h2 class="panel__title">Result</h2>
+          <span class="hint" id="demoNote">Demo result · model not connected yet</span>
+        </div>
+
+        <div class="result" id="result" data-state="idle">
+
+          <div class="state state--idle">
+            <div class="idle-hand">🤟</div>
+            <p class="state__title">Waiting for a sign</p>
+            <p class="state__sub">Your prediction will appear here.</p>
+          </div>
+
+          <div class="state state--scanning">
+            <div class="dots"><span></span><span></span><span></span></div>
+            <p class="state__title" id="scanText">Detecting hand…</p>
+            <p class="state__sub">This only takes a moment.</p>
+          </div>
+
+          <div class="state state--done">
+            <p class="result__label">Recognized sign</p>
+            <div class="result__main">
+              <span class="result__letter" id="resultLetter">A</span>
+              <div class="ring">
+                <svg viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#a78bfa" />
+                      <stop offset="100%" stop-color="#22d3ee" />
+                    </linearGradient>
+                  </defs>
+                  <circle class="ring__bg" cx="60" cy="60" r="52" />
+                  <circle class="ring__fg" id="ringFg" cx="60" cy="60" r="52" />
+                </svg>
+                <div class="ring__text"><b id="confValue">0</b><small>%</small></div>
+              </div>
+            </div>
+            <p class="state__sub">Model confidence. Predictions may be incorrect.</p>
+          </div>
+
+          <div class="state state--error">
+            <div class="idle-hand">⚠️</div>
+            <p class="state__title">Something went wrong</p>
+            <p class="state__sub" id="errorText"></p>
+          </div>
+
+        </div>
+
+        <div class="history">
+          <p class="history__title">Recent</p>
+          <ul id="history" class="history__list">
+            <li class="history__empty">No predictions yet</li>
+          </ul>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- How it works -->
+    <section class="section reveal" id="how">
+      <h2 class="section__title">How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step__num">01</span>
+          <h3>Upload</h3>
+          <p>Add a clear photo of a single hand sign.</p>
+        </div>
+        <div class="step">
+          <span class="step__num">02</span>
+          <h3>Analyze</h3>
+          <p>An AI model studies the hand shape.</p>
+        </div>
+        <div class="step">
+          <span class="step__num">03</span>
+          <h3>Read</h3>
+          <p>Get the sign back as plain text.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Supported signs -->
+    <section class="section reveal" id="signs">
+      <h2 class="section__title">Supported signs</h2>
+      <p class="section__sub">Static alphabet and number signs for now. Letters and digits light up when predicted.</p>
+      <div class="signs" id="signsGrid"></div>
+    </section>
+
+    <footer class="footer">
+      <p>Predictions may be incorrect. Built with curiosity · SignBridge AI v0.1</p>
+    </footer>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
