@@ -2,21 +2,24 @@
 
 ## 1. Project Overview
 
-The **Multilingual Sign Language Recognition System** is an AI-powered web application designed to recognise hand gestures from two sign languages:
+The **Multilingual Sign Language Recognition System** is an AI-powered web application designed to recognise static hand gestures from two sign languages:
 
 - American Sign Language (ASL)
 - Indian Sign Language (ISL)
 
-The system aims to recognise alphabets (A–Z) and numbers (0–9) from both languages and convert the recognised gestures into readable English text.
+The system accepts uploaded images representing alphabets (A–Z) and numbers (0–9) from both languages and converts the recognised gestures into readable English text.
 
 It uses computer vision, hand landmark detection and machine learning techniques to identify and classify sign language gestures.
+
+**Note:** This project focuses exclusively on static image recognition. It does not include webcam-based or live video recognition.
 
 ## 2. Project Objectives
 
 - Recognise ASL alphabets (A–Z) and numbers (0–9).
 - Recognise ISL alphabets (A–Z) and numbers (0–9).
 - Provide separate recognition support for both sign languages.
-- Detect hands and extract hand landmarks from input images.
+- Accept uploaded images as input.
+- Detect hands and extract hand landmarks.
 - Train and evaluate suitable machine learning models.
 - Develop a user-friendly web interface.
 - Convert recognised gestures into readable English text.
@@ -29,10 +32,13 @@ It uses computer vision, hand landmark detection and machine learning techniques
 | Python | Main programming language |
 | OpenCV | Image processing |
 | MediaPipe | Hand detection and landmark extraction |
+| Pillow | Image loading and manipulation |
 | NumPy | Numerical operations |
 | Pandas | Dataset handling |
 | Scikit-learn | Machine learning |
+| XGBoost | Additional classification model |
 | TensorFlow/Keras | Optional deep learning experiments |
+| Joblib | Saving trained models |
 | Flask | Backend development |
 | HTML | Webpage structure |
 | CSS | Website styling |
@@ -41,59 +47,82 @@ It uses computer vision, hand landmark detection and machine learning techniques
 
 ## 4. System Workflow
 
+The proposed system follows this workflow:
+
 1. **Language Selection:** User selects ASL or ISL.
-2. **Input:** User provides a sign language image or webcam input.
-3. **Image Processing:** OpenCV processes the input.
-4. **Hand Detection:** MediaPipe detects the hand.
+2. **Image Upload:** User uploads an image containing a sign language gesture.
+3. **Image Processing:** OpenCV processes the uploaded image.
+4. **Hand Detection:** MediaPipe detects the hand in the image.
 5. **Landmark Extraction:** 21 hand landmarks are extracted.
 6. **Feature Extraction:** Landmark coordinates are converted into numerical features.
 7. **Model Prediction:** The corresponding language recognition model classifies the gesture.
-8. **Output:** The predicted alphabet or number is displayed as English text.
+8. **Output:** The predicted alphabet or number is displayed as readable English text.
 
 ## 5. Development Phases
 
 ### Phase 1: Dataset Collection
+
 - Find suitable ASL and ISL datasets.
-- Collect alphabets A–Z and numbers 0–9 for both languages.
+- Collect images for alphabets A–Z and numbers 0–9.
 - Verify labels and image quality.
 - Organise datasets separately by language and class.
 - Check dataset diversity and class balance.
+- Document dataset sources and limitations.
 
 ### Phase 2: Image Preprocessing
+
 - Load and inspect images.
 - Resize and prepare images where necessary.
 - Apply data augmentation.
+- Remove duplicate, blurry and incorrectly labelled images.
 - Divide datasets into training, validation and testing sets.
 
 ### Phase 3: Hand Detection and Feature Extraction
+
 - Implement MediaPipe hand detection.
 - Extract 21 hand landmarks.
+- Understand X, Y and Z coordinates.
 - Normalise landmark coordinates.
 - Generate structured feature datasets for both languages.
+- Handle images where no hand is detected.
 
 ### Phase 4: Model Development
+
 - Train suitable classification models.
 - Experiment with Random Forest, MLP and XGBoost.
 - Compare model performance.
+- Tune model parameters.
 - Evaluate accuracy, precision, recall and F1-score.
+- Generate confusion matrices.
 - Select and save the best-performing model or models.
 
 ### Phase 5: Website Development
+
 - Develop the frontend.
 - Add ASL and ISL language selection.
-- Implement image upload and/or webcam input.
+- Implement image upload functionality.
+- Display the uploaded image.
 - Create the Flask backend.
-- Display recognition results.
+- Connect the backend to the trained recognition model.
+- Display the predicted alphabet or number.
+- Add clear/reset functionality.
+- Handle invalid image uploads and recognition errors.
 
 ### Phase 6: Integration and Testing
+
 - Integrate frontend, backend and trained models.
 - Test all 36 classes in each language.
-- Test under different lighting and background conditions.
-- Evaluate both languages independently.
+- Test images with different backgrounds and lighting conditions.
+- Test with different users and hand orientations.
+- Evaluate ASL and ISL performance independently.
+- Measure prediction time.
 - Identify and fix recognition errors.
 
 ### Phase 7: Documentation
+
 - Document the methodology.
+- Record dataset sources.
+- Document model training and comparison.
 - Record experimental results.
 - Prepare project documentation.
 - Prepare the final demonstration.
@@ -114,9 +143,14 @@ Multilingual-Sign-Recognition/
 │       ├── validation/
 │       └── test/
 │
-├── preprocessing/
-├── feature_extraction/
 ├── notebooks/
+│
+├── preprocessing/
+│   ├── clean_data.py
+│   └── augment_data.py
+│
+├── feature_extraction/
+│   └── landmarks.py
 │
 ├── models/
 │   ├── asl_model/
@@ -131,14 +165,19 @@ Multilingual-Sign-Recognition/
 │   └── script.js
 │
 ├── tests/
+│   └── evaluate.py
+│
 ├── docs/
+│
 ├── requirements.txt
 └── README.md
 ```
 
+*The folder structure may be modified as development progresses.*
+
 ## 7. Model Evaluation
 
-Each language will be evaluated separately using:
+Each language will be evaluated independently using:
 
 - Accuracy
 - Precision
@@ -147,7 +186,7 @@ Each language will be evaluated separately using:
 - Confusion Matrix
 - Prediction Time
 
-The results will help identify the strengths and limitations of the recognition system for both languages.
+Different models will be compared to identify the most suitable approach for recognising static gestures.
 
 ## 8. Team Collaboration Guidelines
 
@@ -161,8 +200,9 @@ All four team members are expected to understand and contribute to every develop
 6. Keep the repository updated.
 7. Document important changes and decisions.
 8. Communicate blockers clearly.
+9. Ensure that everyone understands the complete project workflow.
 
-**The objective is for every team member to understand the complete project, rather than only one particular module.**
+**The objective is for every team member to understand the complete project rather than only one particular module.**
 
 ## 9. GitHub Contribution Guidelines
 
@@ -182,63 +222,81 @@ git push origin main
 
 For larger changes, create a separate branch and use a pull request before merging into the main branch.
 
-Avoid pushing virtual environments, restricted datasets, API keys, passwords and unnecessary temporary files.
+Avoid pushing:
+
+- Virtual environments.
+- Large datasets without checking repository limits and dataset permissions.
+- API keys or passwords.
+- Temporary files.
+- Unnecessary generated files.
 
 ## 10. Getting Started
 
-### Clone the repository
+### Step 1: Clone the repository
 
 ```bash
 git clone YOUR_REPOSITORY_URL
+```
+
+### Step 2: Enter the project directory
+
+```bash
 cd Multilingual-Sign-Recognition
 ```
 
-### Create a virtual environment
+### Step 3: Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-### Activate the environment (Windows)
+### Step 4: Activate the environment (Windows)
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Install dependencies
+### Step 5: Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
+*The requirements file will be updated as the project dependencies are finalised.*
+
 ## 11. Important Technical Considerations
 
-- ASL and ISL datasets must be maintained separately.
-- Do not assume that the same hand gesture represents the same alphabet in both languages.
+- Ensure datasets represent the correct sign language (ASL or ISL).
+- Maintain separate language labels and datasets.
+- Do not assume that identical hand shapes have identical meanings in both languages.
 - Verify the correctness of every dataset label.
 - Use consistent preprocessing during training and prediction.
-- Avoid data leakage between training and testing.
-- Test with different users, hand orientations, backgrounds and lighting conditions.
-- Static gesture recognition does not cover signs that require movement. These require sequential frame processing and temporal models such as LSTM or GRU.
-- Recognition of individual letters does not automatically provide complete sentence translation.
+- Avoid data leakage between training, validation and testing datasets.
+- Test with different users, backgrounds, hand orientations and lighting conditions.
+- Handle images where no hand is detected.
+- Static image recognition does not recognise gestures that depend on movement.
+- Recognition of individual letters does not automatically provide complete word or sentence translation.
 
 ## 12. Expected Outcome
 
-A functional multilingual web application that:
+A functional multilingual web application capable of:
 
-- Supports ASL and ISL selection.
-- Accepts sign language image or webcam input.
-- Detects and classifies hand gestures.
-- Recognises alphabets and numbers.
-- Displays the predicted result as English text.
+- Supporting ASL and ISL selection.
+- Accepting uploaded sign language images.
+- Detecting and classifying static hand gestures.
+- Recognising alphabets and numbers from both languages.
+- Displaying the predicted result as readable English text.
+- Providing a simple and user-friendly interface.
 
 ## 13. Future Scope
+
+Possible future enhancements include:
 
 - Dynamic sign language recognition.
 - Word and sentence formation.
 - Text-to-speech conversion.
-- Recognition of additional signs.
-- Improved real-time recognition.
+- Recognition of additional sign language gestures.
+- Improved recognition accuracy.
 - Support for additional sign languages.
 
 ---
@@ -247,4 +305,5 @@ A functional multilingual web application that:
 **Domain:** Artificial Intelligence, Machine Learning and Computer Vision  
 **Languages:** American Sign Language (ASL) and Indian Sign Language (ISL)  
 **Recognition Classes:** A–Z and 0–9 for each language  
+**Input Method:** Static Image Upload Only  
 **Team Size:** 4 Members
