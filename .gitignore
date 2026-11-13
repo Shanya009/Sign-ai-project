@@ -1,0 +1,31 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Datasets — never commit
+dataset/*
+!dataset/**/.gitkeep
+
+# Model artefacts
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.keras
+
+# Env / IDE / OS
+.env
+.env.*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temp
+*.log
+tmp/

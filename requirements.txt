@@ -1,0 +1,21 @@
+# Core
+numpy==1.26.4
+pandas==2.2.2
+opencv-python==4.10.0.84
+Pillow==10.4.0
+
+# ISL pipeline (landmarks + classical ML)
+mediapipe==0.10.14
+scikit-learn==1.5.1
+joblib==1.4.2
+
+# ASL pipeline (CNN)
+tensorflow==2.17.0
+keras==3.5.0
+
+# Metrics / plots
+matplotlib==3.9.0
+seaborn==0.13.2
+
+# Backend
+flask==3.0.3
